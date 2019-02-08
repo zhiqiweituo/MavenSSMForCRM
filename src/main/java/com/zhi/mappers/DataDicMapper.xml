@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhi.dao.DataDicDao">
+
+  <resultMap type="DataDic" id="DataDicResult">
+	<result property="id" column="id"/>
+	<result property="dataDicName" column="data_dic_name"/>
+	<result property="dataDicValue" column="data_dic_value"/>
+  </resultMap>
+
+  <select id="findDataDicName" resultType="String">
+    select distinct data_dic_name from sys_data_dic
+  </select>
+  <select id="dataDicList" parameterType="Map" resultMap="DataDicResult">
+    select * from sys_data_dic
+    <where>
+      <if test="dataDicName!=null and dataDicName!=''">
+        and data_dic_name like #{dataDicName}
+      </if>
+      <if test="dataDicValue!=null and dataDicValue!=''">
+        and data_dic_value like #{dataDicValue}
+      </if>
+    </where>
+    <if test="start!=null and rows!=null">
+      limit #{start},#{rows}
+    </if>
+  </select>
+  <select id="dataDicCount" parameterType="Map" resultType="Integer">
+    select count(*) from sys_data_dic
+    <where>
+      <if test="dataDicName!=null and dataDicName!=''">
+        and data_dic_name like #{dataDicName}
+      </if>
+      <if test="dataDicValue!=null and dataDicValue!=''">
+        and data_dic_value like #{dataDicValue}
+      </if>
+    </where>
+  </select>
+
+  <insert id="add" parameterType="DataDic">
+    insert into sys_data_dic values(null,#{dataDicName},#{dataDicValue})
+  </insert>
+  <update id="modify" parameterType="DataDic">
+    update sys_data_dic
+    <set>
+      <if test="dataDicName!=null and dataDicName!=''">
+        data_dic_name=#{dataDicName},
+      </if>
+      <if test="dataDicValue!=null and dataDicValue!=''">
+        data_dic_value=#{dataDicValue},
+      </if>
+    </set>
+    where id=#{id}
+  </update>
+  <delete id="del" parameterType="Integer">
+    delete from sys_data_dic where id=#{id}
+  </delete>
+  
+  <select id="findDataDicValueByDataDicName" parameterType="String" resultType="String">
+    select data_dic_value from sys_data_dic where data_dic_name=#{dataDicName}
+  </select>
+  
+</mapper> 

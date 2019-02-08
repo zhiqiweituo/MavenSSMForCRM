@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhi.dao.UserDao">
+
+  <resultMap type="User" id="UserResult">
+	<result property="id" column="id"/>
+	<result property="userName" column="user_name"/>
+	<result property="password" column="password"/>
+	<result property="trueName" column="true_name"/>
+	<result property="email" column="email"/>
+	<result property="phone" column="phone"/>
+	<result property="roleName" column="role_name"/>
+  </resultMap>
+
+  <select id="login" parameterType="User" resultMap="UserResult">
+	select * from sys_user where user_name=#{userName} and password=#{password}
+  </select>
+  <select id="findRoles" resultType="String">
+	SELECT DISTINCT role_name FROM sys_user
+  </select>
+  <select id="userList" parameterType="Map" resultMap="UserResult">
+    select * from sys_user
+    <where>
+      <if test="userName!=null and userName!=''">
+        and user_name like #{userName}
+      </if>
+      <if test="trueName!=null and trueName!=''">
+        and true_name like #{trueName}
+      </if>
+      <if test="roleName!=null and roleName!=''">
+        and role_name=#{roleName}
+      </if>
+    </where>
+    <if test="start!=null and rows!=null">
+      limit #{start},#{rows}
+    </if>
+  </select>
+  <select id="userCount" parameterType="Map" resultType="Integer">
+    select count(*) from sys_user
+    <where>
+      <if test="userName!=null">
+        and user_name like #{userName}
+      </if>
+      <if test="trueName!=null">
+        and true_name like #{trueName}
+      </if>
+      <if test="roleName!=null">
+        and role_name=#{roleName}
+      </if>
+    </where>
+  </select>
+
+  <insert id="add" parameterType="User">
+    insert into sys_user values(null,#{userName},#{password},#{trueName},#{email},#{phone},#{roleName})
+  </insert>
+  <update id="modify" parameterType="User">
+    update sys_user
+    <set>
+      <if test="userName!=null and userName!=''">
+        user_name=#{userName},
+      </if>
+      <if test="password!=null and password!=''">
+        password=#{password},
+      </if>
+      <if test="trueName!=null and trueName!=''">
+        true_name=#{trueName},
+      </if>
+      <if test="email!=null and email!=''">
+        email=#{email},
+      </if>
+      <if test="phone!=null and phone!=''">
+        phone=#{phone},
+      </if>
+      <if test="roleName!=null and roleName!=''">
+        role_name=#{roleName},
+      </if>
+    </set>
+    where id=#{id}
+  </update>
+  <delete id="del" parameterType="Integer">
+    delete from sys_user where id=#{id}
+  </delete>
+  
+  <select id="findCustomerManager" resultMap="UserResult">
+	SELECT id,true_name,phone FROM sys_user WHERE role_name='客户经理'
+  </select>
+  
+</mapper> 

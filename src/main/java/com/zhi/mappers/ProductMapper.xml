@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhi.dao.ProductDao">
+
+  <resultMap type="Product" id="ProductResult">
+	<result property="id" column="id"/>
+	<result property="productName" column="product_name"/>
+	<result property="model" column="model"/>
+	<result property="unit" column="unit"/>
+	<result property="price" column="price"/>
+	<result property="store" column="store"/>
+	<result property="remark" column="remark"/>
+  </resultMap>
+
+  <select id="productList" parameterType="Map" resultMap="ProductResult">
+    select * from product
+    <where>
+      <if test="productName!=null and productName!=''">
+        and product_name like #{productName}
+      </if>
+      <if test="model!=null and model!=''">
+        and model like #{model}
+      </if>
+    </where>
+    <if test="start!=null and rows!=null">
+      limit #{start},#{rows}
+    </if>
+  </select>
+  <select id="productCount" parameterType="Map" resultType="Integer">
+    select count(*) from product
+    <where>
+      <if test="productName!=null and productName!=''">
+        and product_name like #{productName}
+      </if>
+      <if test="model!=null and model!=''">
+        and model like #{model}
+      </if>
+    </where>
+  </select>
+
+  <insert id="add" parameterType="Product">
+    insert into product values(null,#{productName},#{model},#{unit},#{price},#{store},#{remark})
+  </insert>
+  <update id="modify" parameterType="Product">
+    update product
+    <set>
+      <if test="productName!=null and productName!=''">
+        product_name=#{productName},
+      </if>
+      <if test="model!=null and model!=''">
+        model=#{model},
+      </if>
+      <if test="unit!=null and unit!=''">
+        unit=#{unit},
+      </if>
+      <if test="price!=null and price!=''">
+        price=#{price},
+      </if>
+      <if test="store!=null and store!=''">
+        store=#{store},
+      </if>
+      <if test="remark!=null and remark!=''">
+        remark=#{remark},
+      </if>
+    </set>
+    where id=#{id}
+  </update>
+  <delete id="del" parameterType="Integer">
+    delete from product where id=#{id}
+  </delete>
+  
+</mapper> 

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhi.dao.CustomerLinkManDao">
+
+  <resultMap type="CustomerLinkMan" id="CustomerLinkManResult">
+	<id property="id" column="id"></id>
+	<result property="linkName" column="link_name"></result>
+	<result property="sex" column="sex"></result>
+	<result property="job" column="job"></result>
+	<result property="officePhone" column="office_phone"></result>
+	<result property="cellphone" column="cellphone"></result>
+	<association property="customer" column="customer_id" select="com.zhi.dao.CustomerDao.findById"></association>
+  </resultMap>
+
+  <select id="customerLinkManList" parameterType="Map" resultMap="CustomerLinkManResult">
+    select * from customer_link_man
+    <where>
+	  <if test="customerId!=null and customerId!='' ">
+		and customer_id=#{customerId}
+	  </if>
+	</where>
+    <if test="start!=null and rows!=null">
+      limit #{start},#{rows}
+    </if>
+  </select>
+  <select id="customerLinkManCount" parameterType="Map" resultType="Integer">
+    select count(*) from customer_link_man
+    <where>
+	  <if test="customerId!=null and customerId!='' ">
+		and customer_id=#{customerId}
+	  </if>
+	</where>
+  </select>
+
+  <insert id="add" parameterType="CustomerLinkMan">
+    insert into customer_link_man values(null,#{customer.id},#{linkName},#{sex},#{job},#{officePhone},#{cellphone})
+  </insert>
+  <update id="modify" parameterType="CustomerLinkMan">
+    update customer_link_man
+    <set>
+      <if test="linkName!=null and linkName!=''">
+        link_name=#{linkName},
+      </if>
+      <if test="sex!=null and sex!=''">
+        sex=#{sex},
+      </if>
+      <if test="job!=null and job!=''">
+        job=#{job},
+      </if>
+      <if test="officePhone!=null and officePhone!=''">
+        office_phone=#{officePhone},
+      </if>
+      <if test="cellphone!=null and cellphone!=''">
+        cellphone=#{cellphone},
+      </if>
+    </set>
+    where id=#{id}
+  </update>
+  <delete id="del" parameterType="Integer">
+    delete from customer_link_man where id=#{id}
+  </delete>
+    
+</mapper> 

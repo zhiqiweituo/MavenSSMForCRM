@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhi.dao.CusDevPlanDao">
+
+  <resultMap type="CusDevPlan" id="CusDevPlanResult">
+	<result property="id" column="id"/>
+	<result property="saleChanceId" column="sale_chance_id"/>
+	<result property="planDate" column="plan_date"/>
+	<result property="planItem" column="plan_item"/>
+	<result property="executeAffect" column="execute_affect"/>
+	<association property="saleChance" column="sale_chance_id" select="com.zhi.dao.SaleChanceDao.findById"></association>
+  </resultMap>
+
+  <select id="cusDevPlanList" parameterType="Map" resultMap="CusDevPlanResult">
+    select * from cus_dev_plan
+    <where>
+      <if test="saleChanceId!=null">
+        and sale_chance_id=#{saleChanceId}
+      </if>
+    </where>
+  </select>
+
+  <insert id="add" parameterType="CusDevPlan">
+    insert into cus_dev_plan values(null,#{saleChanceId},#{planDate},#{planItem},#{executeAffect})
+  </insert>
+  <update id="modify" parameterType="CusDevPlan">
+    update cus_dev_plan
+    <set>
+      <if test="saleChanceId!=null">
+        sale_chance_id=#{saleChanceId},
+      </if>
+      <if test="planDate!=null">
+        plan_date=#{planDate},
+      </if>
+      <if test="planItem!=null and planItem!=''">
+        plan_item=#{planItem},
+      </if>
+      <if test="executeAffect!=null and executeAffect!=''">
+        execute_affect=#{executeAffect},
+      </if>
+    </set>
+    where id=#{id}
+  </update>
+  <delete id="del" parameterType="Integer">
+    delete from cus_dev_plan where id=#{id}
+  </delete>
+  
+</mapper> 

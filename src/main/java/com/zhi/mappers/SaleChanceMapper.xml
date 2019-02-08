@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhi.dao.SaleChanceDao">
+
+  <resultMap type="SaleChance" id="SaleChanceDaoResult">
+    <id property="id" column="id"/>
+	<result property="chanceSource" column="chance_source"/>
+	<result property="customerName" column="customer_name"/>
+	<result property="cgjl" column="cgjl"/>
+	<result property="overview" column="overview"/>
+	<result property="linkMan" column="link_man"/>
+	<result property="linkPhone" column="link_phone"/>
+	<result property="description" column="description"/>
+	<result property="createMan" column="create_man"/>
+	<result property="createTime" column="create_time"/>
+	<result property="assignMan" column="assign_man"/>
+	<result property="assignTime" column="assign_time"/>
+	<result property="currentState" column="current_state"/>
+	<result property="devResult" column="dev_result"/>
+  </resultMap>
+
+  <select id="saleChanceList" parameterType="Map" resultMap="SaleChanceDaoResult">
+    select * from sale_chance
+    <where>
+      <if test="customerName!=null and customerName!=''">
+        and customer_name like #{customerName}
+      </if>
+      <if test="overview!=null and overview!=''">
+        and overview like #{overview}
+      </if>
+      <if test="createMan!=null and createMan!=''">
+        and create_man like #{createMan}
+      </if>
+      <if test="currentState!=null">
+        and current_state=#{currentState}
+      </if>
+      <if test="devResult!=null">
+        and dev_result=#{devResult}
+      </if>
+    </where>
+    <if test="start!=null and rows!=null">
+      limit #{start},#{rows}
+    </if>
+  </select>
+  <select id="saleChanceCount" parameterType="Map" resultType="Integer">
+    select count(*) from sale_chance
+    <where>
+      <if test="customerName!=null and customerName!=''">
+        and customer_name like #{customerName}
+      </if>
+      <if test="overview!=null and overview!=''">
+        and overview like #{overview}
+      </if>
+      <if test="createMan!=null and createMan!=''">
+        and create_man like #{createMan}
+      </if>
+      <if test="currentState!=null">
+        and current_state=#{currentState}
+      </if>
+      <if test="devResult!=null">
+        and dev_result=#{devResult}
+      </if>
+    </where>
+  </select>
+
+  <insert id="add" parameterType="SaleChance">
+    insert into sale_chance values(null,#{chanceSource},#{customerName},#{cgjl},#{overview}
+    	,#{linkMan},#{linkPhone},#{description},#{createMan},#{createTime},#{assignMan}
+    	,#{assignTime},#{currentState},#{devResult})
+  </insert>
+  <update id="modify" parameterType="SaleChance">
+    update sale_chance
+    <set>
+      <if test="chanceSource!=null and chanceSource!=''">
+        chance_source=#{chanceSource},
+      </if>
+      <if test="customerName!=null and customerName!=''">
+        customer_name=#{customerName},
+      </if>
+      <if test="cgjl!=null">
+        cgjl=#{cgjl},
+      </if>
+      <if test="overview!=null and overview!=''">
+        overview=#{overview},
+      </if>
+      <if test="linkMan!=null and linkMan!=''">
+        link_man=#{linkMan},
+      </if>
+      <if test="linkPhone!=null and linkPhone!=''">
+        link_phone=#{linkPhone},
+      </if>
+      <if test="description!=null and description!=''">
+        description=#{description},
+      </if>
+      <if test="createMan!=null and createMan!=''">
+        create_man=#{createMan},
+      </if>
+      <if test="createTime!=null">
+        create_time=#{createTime},
+      </if>
+      <if test="assignMan!=null and assignMan!=''">
+        assign_man=#{assignMan},
+      </if>
+      <if test="assignTime!=null">
+        assign_time=#{assignTime},
+      </if>
+      <if test="currentState!=null">
+        current_state=#{currentState},
+      </if>
+      <if test="devResult!=null">
+        dev_result=#{devResult},
+      </if>
+    </set>
+    where id=#{id}
+  </update>
+  <delete id="del" parameterType="Integer">
+    delete from sale_chance where id=#{id}
+  </delete>
+  
+  <select id="findById" parameterType="Integer" resultMap="SaleChanceDaoResult">
+    select * from sale_chance where id=#{id}
+  </select>
+  
+</mapper> 
